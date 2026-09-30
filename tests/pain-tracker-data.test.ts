@@ -16,9 +16,11 @@ test("shoulder and shoulder-rotator selections share the swimmer's shoulder caus
 });
 
 test("cause lookup covers each documented swimmer pain area", () => {
-  for (const location of ["Knee", "Lower Back", "Back", "Neck", "Hip"]) {
-    assert.ok(getCauseGuideForLocation(location));
-  }
+  assert.equal(getCauseGuideForLocation("Knee")?.title, 'Knee ("Breaststroker\'s Knee")');
+  assert.equal(getCauseGuideForLocation("Lower Back")?.title, "Lower back pain");
+  assert.equal(getCauseGuideForLocation("Back")?.title, "Lower back pain");
+  assert.equal(getCauseGuideForLocation("Neck")?.title, "Neck pain");
+  assert.equal(getCauseGuideForLocation("Hip")?.title, "Hip injuries");
 });
 
 test("cause lookup returns null for locations without a documented guide", () => {
