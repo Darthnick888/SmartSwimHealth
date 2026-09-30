@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import {
+  getCauseGuideForLocation,
+  getStretchesForLocation,
+  locationsList
+} from "../../lib/pain-tracker-data";
 
 type PainEntry = {
   id: string;
@@ -11,93 +16,6 @@ type PainEntry = {
 };
 
 const storageKey = "swimstrong-pain-entries";
-
-const stretches: Record<string, string[]> = {
-  shoulder: [
-    "Sleeper stretch - Hold for 30 seconds each side",
-    "Cross-body shoulder stretch - Pull arm across chest",
-    "Doorway pectoral stretch - Lean forward gently",
-    "Reverse shoulder shrug - Hold 10 seconds, repeat 10x"
-  ],
-  shoulder_rotator: [
-    "Internal rotation - Hold arm at 90°, rotate inward",
-    "External rotation - Hold arm at 90°, rotate outward",
-    "Sleeper stretch - Hold for 30 seconds each side",
-    "Band pull-aparts - 3 sets of 12 reps"
-  ],
-  neck: [
-    "Neck tilt - Tilt ear toward shoulder, hold 20 seconds",
-    "Neck rotation - Look over each shoulder, hold 15 seconds",
-    "Chin tucks - 3 sets of 10 reps",
-    "Neck flexion - Gently bring chin to chest, hold 20 seconds"
-  ],
-  lower_back: [
-    "Child's pose - Hold for 30-45 seconds",
-    "Knee to chest stretch - Hold each leg 30 seconds",
-    "Cat-cow stretch - Flow between positions for 10 reps",
-    "Piriformis stretch - Hold 30 seconds each side"
-  ],
-  lower: [
-    "Child's pose - Hold for 30-45 seconds",
-    "Knee to chest stretch - Hold each leg 30 seconds",
-    "Cat-cow stretch - Flow between positions for 10 reps",
-    "Piriformis stretch - Hold 30 seconds each side"
-  ],
-  back: [
-    "Child's pose - Hold for 30-45 seconds",
-    "Knee to chest stretch - Hold each leg 30 seconds",
-    "Cat-cow stretch - Flow between positions for 10 reps",
-    "Supine spinal twist - Hold 30 seconds each side"
-  ],
-  hip: [
-    "Pigeon pose - Hold 45 seconds each side",
-    "Hip flexor stretch - Lunge position, hold 30 seconds",
-    "Butterfly stretch - Hold 30-45 seconds",
-    "Lying figure-4 stretch - Hold 30 seconds each side"
-  ],
-  knee: [
-    "Quad stretch - Pull foot to glute, hold 30 seconds",
-    "Hamstring stretch - Bent knee, fold forward gently",
-    "Calf stretch - Against wall or step, hold 30 seconds",
-    "IT band stretch - Standing position, hold 30 seconds each side"
-  ],
-  ankle: [
-    "Ankle circles - Rotate ankle 10 times each direction",
-    "Calf stretch - Against wall or step, hold 30 seconds",
-    "Plantar fascia roll - Use ball under foot, roll for 1 minute",
-    "Shin stretch - Press top of foot down, hold 20 seconds"
-  ],
-  wrist: [
-    "Wrist flexor stretch - Palm up, gently press back",
-    "Wrist extensor stretch - Palm down, gently press down",
-    "Pronation/supination - Rotate forearm palm up/down",
-    "Prayer stretch - Hold hands in prayer position, slowly lower"
-  ]
-};
-
-const locationsList = [
-  "Shoulder",
-  "Shoulder Rotator",
-  "Neck",
-  "Lower Back",
-  "Back",
-  "Hip",
-  "Knee",
-  "Ankle",
-  "Wrist"
-];
-function getStretchesForLocation(location: string): string[] {
-  if (!location.trim()) return [];
-  const lowercased = location.toLowerCase();
-  
-  for (const [key, value] of Object.entries(stretches)) {
-    if (lowercased.includes(key) || key.includes(lowercased.split(" ")[0] || "")) {
-      return value;
-    }
-  }
-  
-  return [];
-}
 
 export default function PainTrackerPage() {
   const [entries, setEntries] = useState<PainEntry[]>([]);
@@ -207,21 +125,42 @@ export default function PainTrackerPage() {
           </form>
 
           {location.trim() && (
-            <div className="mt-8 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 p-6">
-              <h3 className="text-lg font-semibold text-cyan-100">Recommended stretches for {location}:</h3>
-              <ul className="mt-4 space-y-3">
-                {getStretchesForLocation(location).length > 0 ? (
-                  getStretchesForLocation(location).map((stretch, idx) => (
-                    <li key={idx} className="flex gap-3 text-slate-300">
-                      <span className="text-cyan-300 font-semibold">{idx + 1}.</span>
-                      <span>{stretch}</span>
-                    </li>
-                  ))
-                ) : (
-                  <li className="text-slate-400">No specific stretches found. Consult your trainer for personalized advice.</li>
-                )}
-              </ul>
-            </div>
+            <>
+              <div className="mt-8 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 p-6">
+                <h3 className="text-lg font-semibold text-cyan-100">Recommended stretches for {location}:</h3>
+                <ul className="mt-4 space-y-3">
+                  {getStretchesForLocation(location).length > 0 ? (
+                    getStretchesForLocation(location).map((stretch, idx) => (
+                      <li key={idx} className="flex gap-3 text-slate-300">
+                        <span className="font-semibold text-cyan-300">{idx + 1}.</span>
+                        <span>{stretch}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-slate-400">No specific stretches found. Consult your trainer for personalized advice.</li>
+                  )}
+                </ul>
+              </div>
+
+              {(() => {
+                const guide = getCauseGuideForLocation(location);
+                if (!guide) return null;
+                return (
+                  <div className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-6">
+                    <h3 className="text-lg font-semibold text-amber-100">Common causes: {guide.title}</h3>
+                    {guide.context && <p className="mt-2 text-sm text-amber-100/80">{guide.context}</p>}
+                    {guide.sections.map((section) => (
+                      <div key={section.heading} className="mt-5">
+                        <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-200">{section.heading}</h4>
+                        <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-300">
+                          {section.items.map((item) => <li key={item}>{item}</li>)}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </>
           )}
         </div>
 

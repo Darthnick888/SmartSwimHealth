@@ -4,7 +4,7 @@ A clean, modern Next.js app for high school swimmers to track recovery, log pain
 
 ## Run locally
 
-1. Open a terminal in `c:\Users\np050\Desktop\PTAIPROJECT`
+1. Open a terminal in `C:\Users\np050\Desktop\MyAIProject`
 2. Install dependencies:
 
 ```bash
@@ -21,6 +21,12 @@ npm run dev
 
 ```text
 http://localhost:3000
+```
+
+5. Run the contract tests:
+
+```bash
+npm test
 ```
 
 ## Pages
