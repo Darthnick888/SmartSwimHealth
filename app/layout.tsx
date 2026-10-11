@@ -11,7 +11,8 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/pain-tracker", label: "Pain Tracker" },
   { href: "/recovery-journal", label: "Recovery Journal" },
-  { href: "/injury-education", label: "Injury Education" }
+  { href: "/injury-education", label: "Injury Education" },
+  { href: "/auth", label: "Account" }
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

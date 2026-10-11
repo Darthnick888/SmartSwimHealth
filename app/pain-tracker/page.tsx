@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   getCauseGuideForLocation,
   getStretchesForLocation,
   locationsList
 } from "../../lib/pain-tracker-data";
+import { createClient, isSupabaseConfigured } from "../../lib/supabase/client";
 
 type PainEntry = {
   id: string;
@@ -15,41 +17,34 @@ type PainEntry = {
   notes: string;
 };
 
-const storageKey = "swimstrong-pain-entries";
-
 export default function PainTrackerPage() {
   const [entries, setEntries] = useState<PainEntry[]>([]);
   const [location, setLocation] = useState("");
   const [severity, setSeverity] = useState("Moderate");
   const [notes, setNotes] = useState("");
+  const [user, setUser] = useState<{ id: string } | null>(null);
+  const supabase = useMemo(() => (isSupabaseConfigured ? createClient() : null), []);
 
   useEffect(() => {
-    const json = window.localStorage.getItem(storageKey);
-    if (json) {
-      setEntries(JSON.parse(json));
+    async function loadEntries() {
+      if (!supabase) return;
+      const { data: userData } = await supabase.auth.getUser();
+      setUser(userData.user ? { id: userData.user.id } : null);
+      if (!userData.user) return;
+      const { data } = await supabase.from("pain_entries").select("id,date,location,severity,notes").order("date", { ascending: false });
+      setEntries((data as PainEntry[] | null) ?? []);
     }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(entries));
-  }, [entries]);
+    loadEntries();
+  }, [supabase]);
 
   const recent = useMemo(() => [...entries].sort((a, b) => (a.date < b.date ? 1 : -1)), [entries]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!location.trim()) return;
+    if (!location.trim() || !user || !supabase) return;
 
-    setEntries((current) => [
-      {
-        id: crypto.randomUUID(),
-        date: new Date().toISOString(),
-        location,
-        severity,
-        notes
-      },
-      ...current
-    ]);
+    const { data } = await supabase.from("pain_entries").insert({ user_id: user.id, location, severity, notes }).select("id,date,location,severity,notes").single();
+    if (data) setEntries((current) => [data as PainEntry, ...current]);
     setLocation("");
     setSeverity("Moderate");
     setNotes("");
@@ -57,7 +52,8 @@ export default function PainTrackerPage() {
 
   function handleClear() {
     if (confirm("Clear all pain tracker entries?")) {
-      setEntries([]);
+      if (!user || !supabase) return;
+      supabase.from("pain_entries").delete().eq("user_id", user.id).then(() => setEntries([]));
     }
   }
 
@@ -79,6 +75,7 @@ export default function PainTrackerPage() {
             </button>
           </div>
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+            {!user && <p className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-4 text-sm text-amber-100">Sign in to save entries to your account. <Link href="/auth" className="font-semibold underline">Open account</Link></p>}
             <div>
               <label className="block text-sm font-medium text-slate-200">Where does it hurt?</label>
               <select

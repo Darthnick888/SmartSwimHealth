@@ -1,18 +1,20 @@
 # Stored data
 
-The browser stores JSON arrays under two local-storage keys.
+Supabase stores rows in two tables. Browser local storage is not the source of
+truth for account data.
 
-## `swimstrong-pain-entries`
+## `public.pain_entries`
 
-Each entry has `id`, `date`, `location`, `severity`, and `notes` string fields.
-`date` is an ISO timestamp and `severity` is one of `Low`, `Moderate`, or
-`High` from the form options.
+Each row has `id`, `user_id`, `date`, `location`, `severity`, `notes`, and
+`created_at`. `user_id` references `auth.users`. `severity` is one of `Low`,
+`Moderate`, or `High`.
 
-## `swimstrong-journal-entries`
+## `public.recovery_entries`
 
-Each entry has `id`, `date`, `sleep`, `hydration`, `mood`, and `notes` string
-fields. `date` is stored as an ISO timestamp. `mood` is one of `Excellent`,
-`Good`, `Okay`, or `Tired` from the form options.
+Each row has `id`, `user_id`, `date`, `sleep`, `hydration`, `mood`, `notes`, and
+`created_at`. `user_id` references `auth.users`. `mood` is one of `Excellent`,
+`Good`, `Okay`, or `Tired`.
 
-There is no migration layer. Existing browser data is read and written as
-these JSON arrays.
+The schema and RLS policies are defined in `supabase/schema.sql`. Existing
+local-storage data is not migrated automatically; users must create new
+account-backed entries.

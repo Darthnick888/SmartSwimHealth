@@ -35,9 +35,10 @@ npm test
 - `/pain-tracker` — Pain Tracker
 - `/recovery-journal` — Recovery Journal
 - `/injury-education` — Injury Education
+- `/auth` — Account sign in and registration
 
 ## Notes
 
-- All data is stored in browser local storage.
-- No login or database is used.
+- Pain and recovery data are stored per account in Supabase with row-level security.
+- Configure Supabase and Vercel using [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 - The app uses Next.js, React, and Tailwind CSS.

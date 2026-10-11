@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { createClient, isSupabaseConfigured } from "../../lib/supabase/client";
 
 type JournalEntry = {
   id: string;
@@ -11,8 +13,6 @@ type JournalEntry = {
   notes: string;
 };
 
-const storageKey = "swimstrong-journal-entries";
-
 export default function RecoveryJournalPage() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -20,37 +20,31 @@ export default function RecoveryJournalPage() {
   const [hydration, setHydration] = useState("");
   const [mood, setMood] = useState("Good");
   const [notes, setNotes] = useState("");
+  const [user, setUser] = useState<{ id: string } | null>(null);
+  const supabase = useMemo(() => (isSupabaseConfigured ? createClient() : null), []);
 
   useEffect(() => {
-    const json = window.localStorage.getItem(storageKey);
-    if (json) {
-      setEntries(JSON.parse(json));
+    async function loadEntries() {
+      if (!supabase) return;
+      const { data: userData } = await supabase.auth.getUser();
+      setUser(userData.user ? { id: userData.user.id } : null);
+      if (!userData.user) return;
+      const { data } = await supabase.from("recovery_entries").select("id,date,sleep,hydration,mood,notes").order("date", { ascending: false });
+      setEntries((data as JournalEntry[] | null) ?? []);
     }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(entries));
-  }, [entries]);
+    loadEntries();
+  }, [supabase]);
 
   const recent = useMemo(() => [...entries].sort((a, b) => (a.date < b.date ? 1 : -1)), [entries]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const sleepValue = sleep.trim();
     const hydrationValue = hydration.trim();
-    if (!sleepValue || !hydrationValue || !date) return;
+    if (!sleepValue || !hydrationValue || !date || !user || !supabase) return;
 
-    setEntries((current) => [
-      {
-        id: crypto.randomUUID(),
-        date: new Date(date).toISOString(),
-        sleep: sleepValue,
-        hydration: hydrationValue,
-        mood,
-        notes
-      },
-      ...current
-    ]);
+    const { data } = await supabase.from("recovery_entries").insert({ user_id: user.id, date: new Date(date).toISOString(), sleep: sleepValue, hydration: hydrationValue, mood, notes }).select("id,date,sleep,hydration,mood,notes").single();
+    if (data) setEntries((current) => [data as JournalEntry, ...current]);
     setDate(new Date().toISOString().split("T")[0]);
     setSleep("");
     setHydration("");
@@ -60,7 +54,8 @@ export default function RecoveryJournalPage() {
 
   function handleClear() {
     if (confirm("Clear all recovery journal entries?")) {
-      setEntries([]);
+      if (!user || !supabase) return;
+      supabase.from("recovery_entries").delete().eq("user_id", user.id).then(() => setEntries([]));
     }
   }
 
@@ -82,6 +77,7 @@ export default function RecoveryJournalPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 grid gap-6 sm:grid-cols-2">
+          {!user && <p className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-4 text-sm text-amber-100 sm:col-span-2">Sign in to save entries to your account. <Link href="/auth" className="font-semibold underline">Open account</Link></p>}
           <div>
             <label className="block text-sm font-medium text-slate-200">Date</label>
             <input
