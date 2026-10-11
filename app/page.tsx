@@ -19,7 +19,7 @@ export default function HomePage() {
               Pool-ready recovery
             </span>
             <h2 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-              SwimStrong AI helps student athletes monitor recovery and strengthen injury awareness.
+              Smart Swim Health helps student athletes monitor recovery and strengthen injury awareness.
             </h2>
             <p className="mt-6 max-w-2xl text-cyan-100/80 sm:text-lg">
               Use the Pain Tracker and Recovery Journal to capture how you feel. Explore Injury Education for prevention tips, stretches, and care habits designed for swimmers.

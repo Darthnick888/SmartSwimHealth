@@ -1,4 +1,4 @@
-# SwimStrong development guide
+# Smart Swim Health development guide
 
 ## Verified project facts
 

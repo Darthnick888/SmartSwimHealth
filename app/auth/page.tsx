@@ -33,7 +33,7 @@ export default function AuthPage() {
   return (
     <section className="mx-auto max-w-xl px-6 pb-16 sm:px-10">
       <div className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-8 shadow-lg shadow-slate-950/10">
-        <h2 className="text-3xl font-semibold text-white">Your SwimStrong account</h2>
+        <h2 className="text-3xl font-semibold text-white">Your Smart Swim Health account</h2>
         <p className="mt-2 text-slate-400">Sign in to save pain and recovery entries across your devices.</p>
         <form onSubmit={signIn} className="mt-8 space-y-5">
           <label className="block text-sm font-medium text-slate-200">Email<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-slate-100" /></label>

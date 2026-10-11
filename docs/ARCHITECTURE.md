@@ -1,4 +1,4 @@
-# SwimStrong architecture
+# Smart Swim Health architecture
 
 ## Runtime
 

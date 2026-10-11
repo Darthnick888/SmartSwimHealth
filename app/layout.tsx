@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "SwimStrong AI",
+  title: "Smart Swim Health",
   description: "Track recovery, pain, and injury prevention for student athletes.",
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <header className="mx-auto max-w-7xl px-6 py-6 sm:px-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-sm uppercase tracking-[0.35em] text-sky-300">SwimStrong AI</p>
+                <p className="text-sm uppercase tracking-[0.35em] text-sky-300">Smart Swim Health</p>
                 <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Recovery & Injury Support</h1>
               </div>
               <nav className="flex flex-wrap items-center gap-3 text-sm text-slate-300">

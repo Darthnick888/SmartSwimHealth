@@ -1,4 +1,4 @@
-# SwimStrong AI
+# Smart Swim Health
 
 A clean, modern Next.js app for high school swimmers to track recovery, log pain, and learn injury prevention.
 
