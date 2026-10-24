@@ -42,7 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
           <footer className="border-t border-slate-800/70 py-6 text-center text-sm text-slate-500">
             Built for high school athletes to track recovery and stay injury-aware.
-            <div className="mt-2">Powered by GitHub Copilot.</div>
           </footer>
         </div>
       </body>
