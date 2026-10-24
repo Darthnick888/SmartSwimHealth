@@ -84,6 +84,10 @@ export const stretches: Record<string, string[]> = {
   ]
 };
 
+export const stretchMedia: Record<string, string> = {
+  "sleeper stretch": "https://media.post.rvohealth.io/wp-content/uploads/2023/08/400x400_Sleeper_Stretch_Sleeper_Stretch.gif"
+};
+
 export function getStretchesForLocation(location: string): string[] {
   if (!location.trim()) return [];
   const lowercased = location.toLowerCase();
@@ -95,6 +99,12 @@ export function getStretchesForLocation(location: string): string[] {
   }
 
   return [];
+}
+
+export function getStretchMediaForStretch(stretch: string): string | null {
+  const normalized = stretch.trim().toLowerCase();
+  const mediaKey = Object.keys(stretchMedia).find((key) => normalized.startsWith(key));
+  return mediaKey ? stretchMedia[mediaKey] : null;
 }
 
 export type CauseGuide = {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   getCauseGuideForLocation,
+  getStretchMediaForStretch,
   getStretchesForLocation,
   locationsList
 } from "../../lib/pain-tracker-data";
@@ -130,7 +131,17 @@ export default function PainTrackerPage() {
                     getStretchesForLocation(location).map((stretch, idx) => (
                       <li key={idx} className="flex gap-3 text-slate-300">
                         <span className="font-semibold text-cyan-300">{idx + 1}.</span>
-                        <span>{stretch}</span>
+                        <div>
+                          <span>{stretch}</span>
+                          {getStretchMediaForStretch(stretch) && (
+                            <img
+                              src={getStretchMediaForStretch(stretch) ?? undefined}
+                              alt="Animated demonstration of the sleeper stretch"
+                              loading="lazy"
+                              className="mt-3 h-40 w-40 rounded-xl object-cover"
+                            />
+                          )}
+                        </div>
                       </li>
                     ))
                   ) : (

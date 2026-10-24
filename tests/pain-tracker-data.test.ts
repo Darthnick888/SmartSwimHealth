@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { causeGuides, getCauseGuideForLocation, getStretchesForLocation, locationsList } from "../lib/pain-tracker-data.ts";
+import { causeGuides, getCauseGuideForLocation, getStretchMediaForStretch, getStretchesForLocation, locationsList } from "../lib/pain-tracker-data.ts";
 
 test("location options retain the nine supported pain areas", () => {
   assert.deepEqual(locationsList, ["Shoulder", "Shoulder Rotator", "Neck", "Lower Back", "Back", "Hip", "Knee", "Ankle", "Wrist"]);
@@ -8,6 +8,11 @@ test("location options retain the nine supported pain areas", () => {
 
 test("stretch lookup returns an empty list for an unknown area", () => {
   assert.deepEqual(getStretchesForLocation("Elbow"), []);
+});
+
+test("sleeper stretch media stays attached only to the sleeper stretch", () => {
+  assert.match(getStretchMediaForStretch("Sleeper stretch - Hold for 30 seconds each side") ?? "", /Sleeper_Stretch_Sleeper_Stretch\.gif$/);
+  assert.equal(getStretchMediaForStretch("Cross-body shoulder stretch - Pull arm across chest"), null);
 });
 
 test("shoulder and shoulder-rotator selections share the swimmer's shoulder causes", () => {
