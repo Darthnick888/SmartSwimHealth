@@ -12,13 +12,19 @@ test("stretch lookup returns an empty list for an unknown area", () => {
 
 test("sleeper stretch media stays attached only to the sleeper stretch", () => {
   assert.match(getStretchMediaForStretch("Sleeper stretch - Hold for 30 seconds each side")?.src ?? "", /Sleeper_Stretch_Sleeper_Stretch\.gif$/);
-  assert.equal(getStretchMediaForStretch("Doorway pectoral stretch - Lean forward gently"), null);
+  assert.equal(getStretchMediaForStretch("Reverse shoulder shrug - Hold 10 seconds, repeat 10x"), null);
 });
 
 test("cross-body shoulder media is attached to the cross-body recommendation", () => {
   const media = getStretchMediaForStretch("Cross-body shoulder stretch - Pull arm across chest");
   assert.match(media?.src ?? "", /i\.ytimg\.com\/vi\/Pg0JvLSfWwM\/maxresdefault\.jpg$/);
   assert.match(media?.alt ?? "", /cross-body shoulder stretch/i);
+});
+
+test("doorway pectoral media is attached to the doorway recommendation", () => {
+  const media = getStretchMediaForStretch("Doorway pectoral stretch - Lean forward gently");
+  assert.match(media?.src ?? "", /digitaldentistrynm\.com\/.*doorway-stretches\.jpg$/);
+  assert.match(media?.alt ?? "", /doorway pectoral stretch/i);
 });
 
 test("shoulder and shoulder-rotator selections share the swimmer's shoulder causes", () => {

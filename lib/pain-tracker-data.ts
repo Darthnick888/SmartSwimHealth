@@ -97,6 +97,10 @@ export const stretchMedia: Record<string, StretchMedia> = {
   "cross-body shoulder stretch": {
     src: "https://i.ytimg.com/vi/Pg0JvLSfWwM/maxresdefault.jpg",
     alt: "Demonstration of a cross-body shoulder stretch"
+  },
+  "doorway pectoral stretch": {
+    src: "https://digitaldentistrynm.com/wp-content/uploads/2019/08/doorway-stretches.jpg",
+    alt: "Demonstration of a doorway pectoral stretch"
   }
 };
 
