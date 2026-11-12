@@ -84,8 +84,20 @@ export const stretches: Record<string, string[]> = {
   ]
 };
 
-export const stretchMedia: Record<string, string> = {
-  "sleeper stretch": "https://media.post.rvohealth.io/wp-content/uploads/2023/08/400x400_Sleeper_Stretch_Sleeper_Stretch.gif"
+export type StretchMedia = {
+  src: string;
+  alt: string;
+};
+
+export const stretchMedia: Record<string, StretchMedia> = {
+  "sleeper stretch": {
+    src: "https://media.post.rvohealth.io/wp-content/uploads/2023/08/400x400_Sleeper_Stretch_Sleeper_Stretch.gif",
+    alt: "Animated demonstration of the sleeper stretch"
+  },
+  "cross-body shoulder stretch": {
+    src: "https://i.ytimg.com/vi/Pg0JvLSfWwM/maxresdefault.jpg",
+    alt: "Demonstration of a cross-body shoulder stretch"
+  }
 };
 
 export function getStretchesForLocation(location: string): string[] {
@@ -101,7 +113,7 @@ export function getStretchesForLocation(location: string): string[] {
   return [];
 }
 
-export function getStretchMediaForStretch(stretch: string): string | null {
+export function getStretchMediaForStretch(stretch: string): StretchMedia | null {
   const normalized = stretch.trim().toLowerCase();
   const mediaKey = Object.keys(stretchMedia).find((key) => normalized.startsWith(key));
   return mediaKey ? stretchMedia[mediaKey] : null;

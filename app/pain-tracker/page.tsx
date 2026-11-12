@@ -128,22 +128,25 @@ export default function PainTrackerPage() {
                 <h3 className="text-lg font-semibold text-cyan-100">Recommended stretches for {location}:</h3>
                 <ul className="mt-4 space-y-3">
                   {getStretchesForLocation(location).length > 0 ? (
-                    getStretchesForLocation(location).map((stretch, idx) => (
-                      <li key={idx} className="flex gap-3 text-slate-300">
-                        <span className="font-semibold text-cyan-300">{idx + 1}.</span>
-                        <div>
-                          <span>{stretch}</span>
-                          {getStretchMediaForStretch(stretch) && (
-                            <img
-                              src={getStretchMediaForStretch(stretch) ?? undefined}
-                              alt="Animated demonstration of the sleeper stretch"
-                              loading="lazy"
-                              className="mt-3 h-40 w-40 rounded-xl object-cover"
-                            />
-                          )}
-                        </div>
-                      </li>
-                    ))
+                    getStretchesForLocation(location).map((stretch, idx) => {
+                      const media = getStretchMediaForStretch(stretch);
+                      return (
+                        <li key={idx} className="flex gap-3 text-slate-300">
+                          <span className="font-semibold text-cyan-300">{idx + 1}.</span>
+                          <div>
+                            <span>{stretch}</span>
+                            {media && (
+                              <img
+                                src={media.src}
+                                alt={media.alt}
+                                loading="lazy"
+                                className="mt-3 h-40 w-40 rounded-xl object-cover"
+                              />
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })
                   ) : (
                     <li className="text-slate-400">No specific stretches found. Consult your trainer for personalized advice.</li>
                   )}
