@@ -27,6 +27,12 @@ test("doorway pectoral media is attached to the doorway recommendation", () => {
   assert.match(media?.alt ?? "", /doorway pectoral stretch/i);
 });
 
+test("child's pose media is attached to the child's pose recommendation", () => {
+  const media = getStretchMediaForStretch("Child's pose - Hold for 30-45 seconds");
+  assert.match(media?.src ?? "", /workoutguru\.fit\/.*child-pose-male-video-exercise-guide-tips-2-1536x864\.jpg$/);
+  assert.match(media?.alt ?? "", /child's pose/i);
+});
+
 test("shoulder and shoulder-rotator selections share the swimmer's shoulder causes", () => {
   assert.equal(getCauseGuideForLocation("Shoulder")?.title, causeGuides.shoulder.title);
   assert.equal(getCauseGuideForLocation("Shoulder Rotator")?.title, causeGuides.shoulder.title);

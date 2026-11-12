@@ -101,6 +101,10 @@ export const stretchMedia: Record<string, StretchMedia> = {
   "doorway pectoral stretch": {
     src: "https://digitaldentistrynm.com/wp-content/uploads/2019/08/doorway-stretches.jpg",
     alt: "Demonstration of a doorway pectoral stretch"
+  },
+  "child's pose": {
+    src: "https://workoutguru.fit/wp-content/uploads/2023/10/child-pose-male-video-exercise-guide-tips-2-1536x864.jpg",
+    alt: "Demonstration of child's pose"
   }
 };
 
